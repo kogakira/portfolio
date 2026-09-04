@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Portfolio for evielynn. Full stack software engineer, sole engineer on a live online store, now looking for Roblox development work.">
+<title>evielynn.dev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@400;500;600&display=swap">
+
+<style>
+  /* colors, light is the default */
+  :root{
+    color-scheme: light dark;
+
+    --bg:#e9edf1;
+    --surface:#ffffff;
+    --surface-2:#f2f5f8;
+    --line:#c7d1db;
+    --line-soft:#dde4ea;
+    --ink:#151f28;
+    --ink-dim:#4f6274;
+    --accent:#1b6f8c;
+    --accent-ink:#0c4a61;
+    --accent-quiet:rgba(27,111,140,0.10);
+    --warm:#a95f18;
+    --grid:rgba(21,31,40,0.045);
+    --focus:#1b6f8c;
+    --copy-ink:#eafcff;
+
+    --mono:'Martian Mono', ui-monospace, 'Cascadia Code', 'Courier New', monospace;
+    --sans:'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+    --small:0.8125rem;
+    --h2:1.15rem;
+    --h1:clamp(1.6rem, 1.15rem + 2vw, 2.35rem);
+  }
+
+  /* dark, when the OS asks for it and the user has not forced light */
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0f1620;
+      --surface:#152029;
+      --surface-2:#182430;
+      --line:#28394a;
+      --line-soft:#1f2f3c;
+      --ink:#e6edf3;
+      --ink-dim:#8ca0b3;
+      --accent:#57c7e6;
+      --accent-ink:#9bdcef;
+      --accent-quiet:rgba(87,199,230,0.12);
+      --warm:#efab6b;
+      --grid:rgba(230,237,243,0.035);
+      --focus:#57c7e6;
+      --copy-ink:#04222c;
+    }
+  }
+
+  /* dark, when the user picks it from the button */
+  :root[data-theme="dark"]{
+    --bg:#0f1620;
+    --surface:#152029;
+    --surface-2:#182430;
+    --line:#28394a;
+    --line-soft:#1f2f3c;
+    --ink:#e6edf3;
+    --ink-dim:#8ca0b3;
+    --accent:#57c7e6;
+    --accent-ink:#9bdcef;
+    --accent-quiet:rgba(87,199,230,0.12);
+    --warm:#efab6b;
+    --grid:rgba(230,237,243,0.035);
+    --focus:#57c7e6;
+    --copy-ink:#04222c;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:1rem;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{ color:var(--accent-ink); text-decoration-color:var(--line); text-underline-offset:3px; }
+  a:hover{ text-decoration-color:currentColor; }
+
+  :focus-visible{ outline:2px solid var(--focus); outline-offset:3px; border-radius:2px; }
+
+  .skip{
+    position:absolute; left:-9999px; top:0;
+    background:var(--surface); color:var(--ink);
+    padding:.6rem 1rem; border:1px solid var(--line); z-index:10;
+  }
+  .skip:focus{ left:1rem; top:1rem; }
+
+  /* faint blueprint grid behind everything */
+  .grid-bg{
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size:34px 34px;
+    -webkit-mask-image:radial-gradient(ellipse 130% 80% at 50% 0%, #000 45%, transparent 100%);
+    mask-image:radial-gradient(ellipse 130% 80% at 50% 0%, #000 45%, transparent 100%);
+  }
+
+  .wrap{
+    max-width:1060px;
+    margin:0 auto;
+    padding:clamp(1.5rem,4vw,3rem) clamp(1.4rem,4vw,3rem) clamp(3rem,7vw,4.5rem);
+    display:flex;
+    flex-direction:column;
+    gap:clamp(2rem,5vw,3.25rem);
+  }
+
+  /* the page comes into focus on load */
+  @media (prefers-reduced-motion: no-preference){
+    .grid-bg{ animation:gridin 1.3s ease-out; }
+    .top{ animation:settle .6s cubic-bezier(.2,.7,.2,1); }
+    .cols{ animation:settle .85s cubic-bezier(.2,.7,.2,1) .12s backwards; }
+  }
+  @keyframes settle{
+    from{ opacity:0; filter:blur(11px); transform:translateY(8px); }
+    to{ opacity:1; filter:blur(0); transform:none; }
+  }
+  @keyframes gridin{
+    from{ opacity:0; }
+    to{ opacity:1; }
+  }
+
+  /* top bar */
+  .top{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:1rem 2rem; flex-wrap:wrap;
+    padding-bottom:clamp(1.1rem,2.6vw,1.6rem);
+    border-bottom:1px solid var(--line);
+  }
+  .mark{
+    font-family:var(--mono); font-weight:600;
+    font-size:clamp(1.75rem, 1.3rem + 2vw, 2.6rem);
+    letter-spacing:-0.05em; line-height:.95;
+    color:var(--ink); text-decoration:none; white-space:nowrap;
+  }
+  .mark .tld{ font-size:.42em; letter-spacing:0; color:var(--accent); }
+  .top-right{
+    display:flex; align-items:center; gap:1rem;
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.02em;
+  }
+  .status{ display:flex; align-items:center; gap:.5rem; color:var(--ink-dim); }
+  .dot{
+    width:7px; height:7px; border-radius:50%;
+    background:var(--warm);
+    box-shadow:0 0 0 3px color-mix(in srgb, var(--warm) 22%, transparent);
+    flex:none;
+  }
+  .theme{
+    font:inherit; font-size:.95rem; line-height:1;
+    background:var(--surface); color:var(--ink-dim);
+    border:1px solid var(--line); border-radius:5px;
+    padding:.4rem .5rem; cursor:pointer;
+  }
+  .theme:hover{ color:var(--ink); border-color:var(--ink-dim); }
+
+  /* two columns on wider screens */
+  .cols{ display:grid; grid-template-columns:1fr; gap:clamp(1.8rem,4vw,2.5rem); }
+  @media (min-width:880px){
+    .cols{ grid-template-columns:180px minmax(0,1fr); gap:clamp(2.5rem,6vw,4.5rem); align-items:start; }
+    .nav{ position:sticky; top:clamp(1.5rem,4vw,2.5rem); }
+  }
+
+  /* the little route tree */
+  .nav{ font-family:var(--mono); }
+  .nav b{
+    display:block; font-weight:400;
+    font-size:.64rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-dim); margin:0 0 .7rem .1rem;
+  }
+  .tree{ list-style:none; margin:0; padding:0; font-size:var(--small); display:flex; flex-direction:column; gap:.15rem; }
+  .tree a{
+    display:flex; gap:.5rem; align-items:baseline;
+    padding:.4rem .55rem;
+    color:var(--ink-dim); text-decoration:none;
+    border-left:2px solid var(--line-soft);
+    letter-spacing:-0.02em;
+    transition:color .15s, background .15s, border-color .15s;
+  }
+  .tree .b{ color:var(--line); user-select:none; }
+  .tree a:hover{ color:var(--ink); background:var(--surface-2); border-left-color:var(--ink-dim); }
+  .tree a[aria-current="page"]{ color:var(--accent-ink); background:var(--accent-quiet); border-left-color:var(--accent); }
+  .tree a[aria-current="page"] .b{ color:var(--accent); }
+
+  @media (max-width:879px){
+    .nav b{ display:none; }
+    .tree{ flex-direction:row; flex-wrap:wrap; gap:.3rem; font-size:.8rem; }
+    .tree .b{ display:none; }
+    .tree a{ border-left:0; border-bottom:2px solid var(--line-soft); }
+    .tree a:hover{ border-left:0; }
+    .tree a[aria-current="page"]{ border-left:0; border-bottom-color:var(--accent); }
+  }
+
+  /* pages */
+  main{ min-width:0; }
+  .page{ display:flex; flex-direction:column; gap:clamp(1.9rem,4vw,2.8rem); }
+  .page[hidden]{ display:none; }
+
+  @media (prefers-reduced-motion: no-preference){
+    /* only animate page swaps after the intro has played */
+    body[data-ready] .page:not([hidden]){ animation:fade .34s cubic-bezier(.2,.6,.2,1) both; }
+    @keyframes fade{ from{ opacity:0; transform:translateY(7px); } to{ opacity:1; transform:none; } }
+  }
+
+  .tag{ font-family:var(--mono); font-size:var(--small); letter-spacing:.03em; color:var(--accent-ink); margin:0 0 .85rem; }
+
+  h1{
+    font-family:var(--sans); font-weight:700;
+    font-size:var(--h1); line-height:1.12; letter-spacing:-0.018em;
+    text-wrap:balance; margin:0;
+  }
+  h2{ font-family:var(--sans); font-weight:600; font-size:var(--h2); letter-spacing:-0.01em; margin:0 0 .8rem; }
+
+  .lede{ font-size:var(--h2); line-height:1.5; max-width:34ch; margin:.7rem 0 0; color:var(--ink); }
+  p{ max-width:62ch; margin:0; }
+  p + p{ margin-top:.9rem; }
+
+  .row{ padding-top:clamp(1.5rem,3.2vw,2.2rem); border-top:1px solid var(--line-soft); }
+  .row.first{ padding-top:0; border-top:0; }
+
+  /* home stat boxes */
+  .stats{ display:flex; flex-wrap:wrap; gap:.7rem; margin-top:1.4rem; }
+  .stat{ border:1px solid var(--line); background:var(--surface); border-radius:7px; padding:.8rem 1.05rem; min-width:8.5rem; }
+  .stat b{
+    display:block; font-family:var(--mono); font-weight:600;
+    font-size:1.4rem; letter-spacing:-0.045em; color:var(--ink);
+    font-variant-numeric:tabular-nums;
+  }
+  .stat span{ display:block; font-size:.76rem; color:var(--ink-dim); letter-spacing:.02em; margin-top:.15rem; }
+
+  /* language list */
+  .chips{ display:flex; flex-wrap:wrap; gap:.4rem; margin-top:1rem; }
+  .chip{
+    font-family:var(--mono); font-size:.72rem; letter-spacing:-0.01em;
+    color:var(--ink-dim); border:1px solid var(--line); border-radius:5px;
+    padding:.28rem .5rem; background:var(--surface); white-space:nowrap;
+  }
+  .chip.on{
+    color:var(--accent-ink);
+    border-color:color-mix(in srgb, var(--accent) 45%, var(--line));
+    background:var(--accent-quiet);
+  }
+
+  ul.plain{ list-style:none; margin:1rem 0 0; padding:0; display:flex; flex-direction:column; gap:.65rem; max-width:60ch; }
+  ul.plain li{ position:relative; padding-left:1.35rem; }
+  ul.plain li::before{ content:"+"; position:absolute; left:0; color:var(--accent); font-family:var(--mono); }
+
+  ul.links{ list-style:none; margin:1rem 0 0; padding:0; display:flex; flex-direction:column; gap:.5rem; }
+
+  /* skills grid */
+  .grid4{
+    display:grid; grid-template-columns:1fr; gap:1px;
+    background:var(--line-soft); border:1px solid var(--line-soft);
+    border-radius:8px; overflow:hidden; margin-top:1.3rem;
+  }
+  @media (min-width:600px){ .grid4{ grid-template-columns:1fr 1fr; } }
+  .box{ background:var(--surface); padding:1.05rem 1.15rem; }
+  .box h3{
+    font-family:var(--mono); font-weight:500;
+    font-size:.73rem; letter-spacing:.02em; color:var(--accent-ink);
+    margin:0 0 .55rem;
+  }
+  .box p{ font-size:.9rem; color:var(--ink-dim); line-height:1.55; margin:0; }
+
+  /* project slideshow */
+  .show{
+    border:1px solid var(--line); border-radius:10px;
+    background:var(--surface); overflow:hidden; margin-top:1.3rem;
+  }
+  .show-view{ overflow:hidden; }
+  .show-track{ display:flex; align-items:flex-start; }
+  @media (prefers-reduced-motion: no-preference){
+    .show-track{ transition:transform .35s cubic-bezier(.2,.6,.2,1); }
+    .show-view{ transition:height .35s cubic-bezier(.2,.6,.2,1); }
+  }
+  .slide{
+    flex:0 0 100%; min-width:0;
+    padding:clamp(1.3rem,3vw,2rem);
+    display:flex; flex-direction:column; gap:1rem;
+  }
+  .slide h3{
+    font-family:var(--sans); font-weight:700;
+    font-size:var(--h2); letter-spacing:-0.01em; margin:0;
+  }
+  .slide .stats{ margin-top:.3rem; }
+  .slide .chips{ margin-top:.3rem; }
+  .slide p{ font-size:.95rem; }
+
+  /* language split bar */
+  .langs{ display:flex; flex-direction:column; gap:.55rem; margin-top:.2rem; }
+  .lang-bar{ display:flex; height:8px; border-radius:4px; overflow:hidden; background:var(--line-soft); }
+  .lang-bar span{ display:block; height:100%; }
+  .lang-bar span:nth-child(1){ background:var(--accent); }
+  .lang-bar span:nth-child(2){ background:color-mix(in srgb, var(--accent) 45%, var(--line)); }
+  .lang-bar span:nth-child(3){ background:var(--ink-dim); }
+  .lang-key{ display:flex; flex-wrap:wrap; gap:.35rem 1rem; font-family:var(--mono); font-size:.7rem; color:var(--ink-dim); }
+  .lang-key span{ display:flex; align-items:center; gap:.4rem; }
+  .lang-key i{ width:8px; height:8px; border-radius:2px; flex:none; }
+  .lang-key span:nth-child(1) i{ background:var(--accent); }
+  .lang-key span:nth-child(2) i{ background:color-mix(in srgb, var(--accent) 45%, var(--line)); }
+  .lang-key span:nth-child(3) i{ background:var(--ink-dim); }
+
+  .show-bar{
+    display:flex; align-items:center; gap:.9rem;
+    padding:.7rem clamp(1.3rem,3vw,2rem);
+    border-top:1px solid var(--line-soft);
+    font-family:var(--mono); font-size:.72rem;
+  }
+  .show-btn{
+    font:inherit; letter-spacing:.02em;
+    background:none; color:var(--accent-ink);
+    border:1px solid var(--line); border-radius:5px;
+    padding:.35rem .6rem; cursor:pointer;
+  }
+  .show-btn:hover:not(:disabled){ border-color:var(--accent); }
+  .show-btn:disabled{ color:var(--ink-dim); opacity:.5; cursor:default; }
+  .show-count{ color:var(--ink-dim); font-variant-numeric:tabular-nums; }
+  .show-dots{ display:flex; gap:.4rem; margin-left:auto; }
+  .show-dots button{
+    width:8px; height:8px; padding:0; border:0; border-radius:50%;
+    background:var(--line); cursor:pointer;
+  }
+  .show-dots button[aria-current="true"]{ background:var(--accent); }
+
+  /* contact */
+  .discord{
+    display:flex; flex-wrap:wrap; align-items:center; gap:.85rem;
+    padding:1.15rem 1.25rem;
+    border:1px solid var(--line); border-radius:8px; background:var(--surface);
+  }
+  .discord .label{ font-family:var(--mono); font-size:.7rem; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-dim); }
+  .discord .name{
+    font-family:var(--mono); font-weight:600;
+    font-size:clamp(1.15rem,.9rem + 1.5vw,1.55rem);
+    letter-spacing:-0.03em; color:var(--ink);
+  }
+  .copy{
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.02em;
+    background:var(--accent); color:var(--copy-ink);
+    border:0; border-radius:5px; padding:.5rem .8rem; cursor:pointer; margin-left:auto;
+  }
+  .copy:hover{ filter:brightness(1.08); }
+  .copy[data-copied="1"]{ background:var(--surface); color:var(--accent-ink); border:1px solid var(--accent); filter:none; }
+
+  footer{
+    margin-top:clamp(2.5rem,6vw,4rem);
+    padding-top:1.3rem; border-top:1px solid var(--line-soft);
+    display:flex; flex-wrap:wrap; gap:.5rem 1.3rem;
+    font-family:var(--mono); font-size:.67rem; letter-spacing:.01em; color:var(--ink-dim);
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="grid-bg" aria-hidden="true"></div>
+
+<div class="wrap">
+
+  <header class="top">
+    <a class="mark" href="#/">evielynn<span class="tld">.dev</span></a>
+    <div class="top-right">
+      <span class="status"><span class="dot" aria-hidden="true"></span> available for work</span>
+      <button class="theme" type="button" id="themeBtn" aria-label="Switch color theme">&#9680;</button>
+    </div>
+  </header>
+
+  <div class="cols">
+
+    <nav class="nav" aria-label="Site">
+      <b>sitemap</b>
+      <ul class="tree">
+        <li><a href="#/" data-route="home"><span class="b" aria-hidden="true">├─</span> home</a></li>
+        <li><a href="#/experience" data-route="experience"><span class="b" aria-hidden="true">├─</span> experience</a></li>
+        <li><a href="#/contact" data-route="contact"><span class="b" aria-hidden="true">└─</span> contact</a></li>
+      </ul>
+    </nav>
+
+    <main id="main">
+
+      <!-- home -->
+      <section class="page" id="home">
+        <div class="row first">
+          <p class="tag">// home</p>
+          <h1>Full Stack and Generalist Software Engineer</h1>
+          <p class="lede">Five years of paid work. Now I want to build Roblox games.</p>
+          <div class="stats">
+            <div class="stat"><b>5 yrs</b><span>paid work</span></div>
+            <div class="stat"><b>7 yrs</b><span>writing code</span></div>
+            <div class="stat"><b>100k+</b><span>lines written</span></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <p>I studied software in college and I have been writing code for seven years. Most of that is outside Roblox. I know Roblox Studio, Lua, and Luau, and I can learn a new system without someone walking me through it. I have not worked for a Roblox studio yet. That is the one thing I am upfront about.</p>
+        </div>
+
+        <div class="row">
+          <h2>Languages</h2>
+          <div class="chips" aria-label="Programming languages">
+            <span class="chip on">Luau</span>
+            <span class="chip on">Lua</span>
+            <span class="chip">Python</span>
+            <span class="chip">Java</span>
+            <span class="chip">C#</span>
+            <span class="chip">JavaScript</span>
+            <span class="chip">TypeScript</span>
+            <span class="chip">PHP</span>
+            <span class="chip">SQL</span>
+            <span class="chip">Bash</span>
+            <span class="chip">HTML</span>
+            <span class="chip">CSS</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <h2>What I want</h2>
+          <p>I want paid Roblox work. Commissions, long term roles, studio positions, and projects I can stay on while the game grows. I want to work with teams that take their game seriously and need code handled across the whole project.</p>
+          <ul class="links">
+            <li><a href="#/experience">See how I work</a></li>
+            <li><a href="#/contact">Message me on Discord</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- experience -->
+      <section class="page" id="experience" hidden>
+        <div class="row first">
+          <p class="tag">// experience</p>
+          <h1>What I've built</h1>
+          <p class="lede">Projects I built and maintain. More will be added here.</p>
+        </div>
+
+        <div class="row">
+          <div class="show" aria-roledescription="carousel" aria-label="Projects">
+            <div class="show-view">
+              <div class="show-track">
+
+                <article class="slide" aria-roledescription="slide" aria-label="1 of 3">
+                  <h3>Major retail brand, Dell partner</h3>
+                  <div class="stats">
+                    <div class="stat"><b>24k</b><span>lines of code</span></div>
+                    <div class="stat"><b>1</b><span>engineer, me</span></div>
+                    <div class="stat"><b>7</b><span>services integrated</span></div>
+                  </div>
+                  <p>I am the only engineer for a major retail brand and authorized Dell partner. That partnership makes me Dell Partner certified. I built the platform, I run it, and the same codebase serves two separate storefronts.</p>
+                  <p>Payments run through Stripe and PayPal. Shipping runs through Shippo, with live rates and printed labels. Cloudflare Turnstile screens the forms, and its analytics API feeds the admin panel. Address lookup uses OpenStreetMap. Customer email goes out over SMTP.</p>
+                  <p>On top of that I wrote the account system, the admin dashboard, the cart and checkout, the product catalog, order processing, and file uploads. I own the whole stack. When something breaks in production, I fix it.</p>
+                  <div class="langs" aria-label="Language split">
+                    <div class="lang-bar">
+                      <span style="width:62%"></span>
+                      <span style="width:29%"></span>
+                      <span style="width:9%"></span>
+                    </div>
+                    <div class="lang-key">
+                      <span><i></i>JavaScript 62%</span>
+                      <span><i></i>CSS 29%</span>
+                      <span><i></i>HTML 9%</span>
+                    </div>
+                  </div>
+                  <div class="chips" aria-label="Stack">
+                    <span class="chip on">Node</span>
+                    <span class="chip on">Express</span>
+                    <span class="chip">MySQL</span>
+                    <span class="chip">SQLite</span>
+                    <span class="chip">Stripe</span>
+                    <span class="chip">PayPal</span>
+                    <span class="chip">Shippo</span>
+                    <span class="chip">Cloudflare</span>
+                  </div>
+                </article>
+
+                <article class="slide" aria-roledescription="slide" aria-label="2 of 3">
+                  <h3>Procedural Backrooms game</h3>
+                  <div class="stats">
+                    <div class="stat"><b>1.4k</b><span>lines of Luau</span></div>
+                  </div>
+                  <p>An endless Backrooms built on a 200 by 200 grid of cells. Each cell is one room with four possible openings. A depth first search starts at the center, steps to a random unvisited neighbor, carves the opening between them, and backtracks at every dead end. That gives a perfect maze where every room connects.</p>
+                  <p>A plain maze feels wrong for the Backrooms, so the walk is weighted. 34% of the time it keeps going straight and 65% of the time it prefers a turn, which makes long hallways instead of noise. After the carve, every leftover wall has a 6% chance to open, so the space gets loops and you can walk in circles. Big rooms drop in from a weighted table, from 2 by 2 up to a rare 6 by 8, with their inner walls pulled out so they read as one space. Rare dark stretches follow a random path of 3 to 12 connected rooms.</p>
+                  <div class="chips" aria-label="Stack">
+                    <span class="chip on">Luau</span>
+                    <span class="chip on">Roblox Studio</span>
+                    <span class="chip">procedural generation</span>
+                    <span class="chip">maze generation</span>
+                  </div>
+                </article>
+
+                <article class="slide" aria-roledescription="slide" aria-label="3 of 3">
+                  <h3>Combat game</h3>
+                  <div class="stats">
+                    <div class="stat"><b>6k</b><span>lines of Luau</span></div>
+                  </div>
+                  <p>A full combat game built as a set of server services. Combat, enemies, data saving, the shop, and dev tools each run in their own service and talk through shared modules. The client is split the same way, one script per system: weapons, movement, backpack, shop.</p>
+                  <p>Content is kept out of the code. Enemies, weapons, shops, currency, and animations are all config modules, so adding a new enemy or weapon is a data change, not a rewrite. Player progress saves through a data service, and an inventory ledger tracks what each player owns.</p>
+                  <div class="chips" aria-label="Stack">
+                    <span class="chip on">Luau</span>
+                    <span class="chip on">Roblox Studio</span>
+                    <span class="chip">service architecture</span>
+                    <span class="chip">config driven</span>
+                    <span class="chip">data persistence</span>
+                  </div>
+                </article>
+
+              </div>
+            </div>
+            <div class="show-bar">
+              <button class="show-btn" type="button" data-dir="prev" aria-label="Previous project">prev</button>
+              <span class="show-count" aria-live="polite">01 / 03</span>
+              <button class="show-btn" type="button" data-dir="next" aria-label="Next project">next</button>
+              <span class="show-dots"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <p>Alongside that, a lot of my work has been in code other people wrote. I read an unfamiliar codebase, work out how it fits together, fix bugs, and add features without breaking the rest. I have worked on teams and kept things organized so the next person can follow the code.</p>
+        </div>
+
+        <div class="row">
+          <h2>How I work</h2>
+          <ul class="plain">
+            <li>I write code fast and keep it clean</li>
+            <li>I read the code and follow how it connects before I change it</li>
+            <li>I build systems from scratch and own them start to finish</li>
+            <li>I keep code organized so other people can work on it later</li>
+            <li>I move between databases, backend, and frontend as the project needs</li>
+            <li>I work with builders, UI designers, animators, modelers, and VFX artists</li>
+            <li>I can join a project that already exists and learn it before changing anything</li>
+          </ul>
+        </div>
+
+        <div class="row">
+          <h2>What I can build in Roblox</h2>
+          <p>Here is what I can take on in Roblox, based on my own projects and my professional work.</p>
+          <div class="grid4">
+            <div class="box">
+              <h3>gameplay and mechanics</h3>
+              <p>Gameplay systems, mechanics, abilities, combat, transformations, missions, events, and procedural generation.</p>
+            </div>
+            <div class="box">
+              <h3>data and progression</h3>
+              <p>Saving data, inventories, currencies, progression, leaderboards, and stats.</p>
+            </div>
+            <div class="box">
+              <h3>server and networking</h3>
+              <p>Client and server logic, networking, backend systems, UI scripting, and admin tools.</p>
+            </div>
+            <div class="box">
+              <h3>fixes and performance</h3>
+              <p>Debugging, bug fixes, performance work, and new features for games that are already live.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- contact -->
+      <section class="page" id="contact" hidden>
+        <div class="row first">
+          <p class="tag">// contact</p>
+          <h1>Get in touch</h1>
+          <p class="lede">The best way to reach me is Discord.</p>
+        </div>
+
+        <div class="row">
+          <div class="discord">
+            <span class="label">Discord</span>
+            <span class="name" id="discordId">dalianos_230</span>
+            <button class="copy" type="button" id="copyBtn" data-copied="0">copy</button>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <span>evielynn.dev</span>
+        <span>Full Stack and Generalist Software Engineer</span>
+        <span>Discord: dalianos_230</span>
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  const root = document.documentElement;
+  const themeBtn = document.getElementById("themeBtn");
+  const themeKey = "evl-theme";
+
+  let saved = null;
+  try { saved = localStorage.getItem(themeKey); } catch (e) {}
+  if (saved === "light" || saved === "dark") root.setAttribute("data-theme", saved);
+
+  function currentTheme() {
+    if (root.hasAttribute("data-theme")) return root.getAttribute("data-theme");
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+
+  function drawThemeBtn() {
+    const dark = currentTheme() === "dark";
+    themeBtn.textContent = dark ? "◑" : "◐";
+    themeBtn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+  }
+
+  themeBtn.addEventListener("click", function () {
+    const next = currentTheme() === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem(themeKey, next); } catch (e) {}
+    drawThemeBtn();
+  });
+
+  drawThemeBtn();
+
+  // show one page at a time based on the hash
+  const pages = ["home", "experience", "contact"];
+  const titles = {
+    home: "evielynn.dev",
+    experience: "experience · evielynn.dev",
+    contact: "contact · evielynn.dev"
+  };
+  const navLinks = document.querySelectorAll(".tree a");
+
+  function showPage() {
+    let name = location.hash.replace(/^#\/?/, "");
+    if (!pages.includes(name)) name = "home";
+
+    for (const id of pages) {
+      document.getElementById(id).hidden = id !== name;
+    }
+    for (const link of navLinks) {
+      link.setAttribute("aria-current", link.dataset.route === name ? "page" : "false");
+    }
+    document.title = titles[name];
+  }
+
+  window.addEventListener("hashchange", function () {
+    showPage();
+    window.scrollTo(0, 0);
+  });
+
+  showPage();
+
+  // let the intro finish before page swaps start animating
+  setTimeout(function () { document.body.dataset.ready = "1"; }, 200);
+
+  // copy the discord name
+  const copyBtn = document.getElementById("copyBtn");
+  const discordName = document.getElementById("discordId").textContent.trim();
+  let backToCopy;
+
+  copyBtn.addEventListener("click", async function () {
+    try {
+      await navigator.clipboard.writeText(discordName);
+    } catch (e) {
+      selectDiscord();
+    }
+    copyBtn.textContent = "copied";
+    copyBtn.dataset.copied = "1";
+    clearTimeout(backToCopy);
+    backToCopy = setTimeout(function () {
+      copyBtn.textContent = "copy";
+      copyBtn.dataset.copied = "0";
+    }, 2000);
+  });
+
+  function selectDiscord() {
+    const node = document.getElementById("discordId");
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  // project slideshow
+  const show = document.querySelector(".show");
+  if (show) {
+    const view = show.querySelector(".show-view");
+    const track = show.querySelector(".show-track");
+    const slides = Array.from(track.children);
+    const dotsWrap = show.querySelector(".show-dots");
+    const count = show.querySelector(".show-count");
+    const prevBtn = show.querySelector('[data-dir="prev"]');
+    const nextBtn = show.querySelector('[data-dir="next"]');
+    let at = 0;
+
+    const pad = (n) => String(n).padStart(2, "0");
+
+    slides.forEach(function (slide, n) {
+      slide.setAttribute("aria-label", (n + 1) + " of " + slides.length);
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.setAttribute("aria-label", "Go to project " + (n + 1));
+      dot.addEventListener("click", function () { goTo(n); });
+      dotsWrap.append(dot);
+    });
+    const dots = Array.from(dotsWrap.children);
+
+    // keep the frame the height of the slide you're on, no dead space
+    function fitHeight() {
+      const h = slides[at].offsetHeight;
+      if (h > 0) view.style.height = h + "px";
+    }
+
+    function goTo(n) {
+      at = Math.max(0, Math.min(n, slides.length - 1));
+      track.style.transform = "translateX(-" + (at * 100) + "%)";
+      count.textContent = pad(at + 1) + " / " + pad(slides.length);
+      prevBtn.disabled = at === 0;
+      nextBtn.disabled = at === slides.length - 1;
+      dots.forEach(function (dot, i) {
+        dot.setAttribute("aria-current", i === at ? "true" : "false");
+      });
+      fitHeight();
+    }
+
+    prevBtn.addEventListener("click", function () { goTo(at - 1); });
+    nextBtn.addEventListener("click", function () { goTo(at + 1); });
+    show.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") goTo(at - 1);
+      if (e.key === "ArrowRight") goTo(at + 1);
+    });
+
+    window.addEventListener("resize", fitHeight);
+    if (window.ResizeObserver) {
+      const ro = new ResizeObserver(fitHeight);
+      slides.forEach(function (s) { ro.observe(s); });
+    }
+
+    goTo(0);
+  }
+</script>
+
+</body>
+</html>
